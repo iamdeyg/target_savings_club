@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as MemberRouteImport } from './routes/member'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -33,6 +34,11 @@ import { Route as AdminSavingsManualRouteImport } from './routes/admin.savings.m
 import { Route as AdminMembersIdRouteImport } from './routes/admin.members.$id'
 import { Route as AdminApplicationsIdRouteImport } from './routes/admin.applications.$id'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MemberRoute = MemberRouteImport.update({
   id: '/member',
   path: '/member',
@@ -153,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/member': typeof MemberRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/applications': typeof AdminApplicationsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/loans': typeof AdminLoansRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/applications': typeof AdminApplicationsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/loans': typeof AdminLoansRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/member': typeof MemberRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/applications': typeof AdminApplicationsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/loans': typeof AdminLoansRoute
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/member'
+    | '/reset-password'
     | '/admin/applications'
     | '/admin/audit'
     | '/admin/loans'
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/reset-password'
     | '/admin/applications'
     | '/admin/audit'
     | '/admin/loans'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/member'
+    | '/reset-password'
     | '/admin/applications'
     | '/admin/audit'
     | '/admin/loans'
@@ -303,10 +315,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   MemberRoute: typeof MemberRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/member': {
       id: '/member'
       path: '/member'
@@ -561,6 +581,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   MemberRoute: MemberRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

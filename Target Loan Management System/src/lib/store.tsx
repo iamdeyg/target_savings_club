@@ -47,12 +47,16 @@ interface StoreActions {
   createMember: (input: CreateMemberInput) => Member;
   updateConfig: (patch: Partial<Config>) => void;
   updateMember: (id: string, patch: Partial<Member>) => void;
-  changeAdminPassword: (currentPassword: string, nextPassword: string) => boolean;
+  changeAdminPassword: (
+    currentPassword: string,
+    nextPassword: string,
+  ) => boolean;
   changeMemberPassword: (
     memberId: string,
     currentPassword: string,
     nextPassword: string,
   ) => boolean;
+  resetPassword: (identifier: string, nextPassword: string) => boolean;
 
   approveLoan: (memberId: string) => void;
   rejectLoan: (memberId: string, remarks: string) => void;
@@ -195,6 +199,39 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ),
         );
         pushAudit(setAudit, "Member Password Changed", memberId);
+        return true;
+      },
+      resetPassword: (identifier, nextPassword) => {
+        const normalized = identifier.trim().toLowerCase();
+        if (!normalized || nextPassword.length < 6) {
+          return false;
+        }
+
+        const isAdmin =
+          normalized === "admin" ||
+          normalized === "admin@target.club" ||
+          normalized === "general admin";
+        if (isAdmin) {
+          setAdminPassword(nextPassword);
+          pushAudit(setAudit, "Admin Password Reset", "General Admin");
+          return true;
+        }
+
+        const member = members.find(
+          (m) =>
+            m.id.toLowerCase() === normalized ||
+            m.email.toLowerCase() === normalized,
+        );
+        if (!member) {
+          return false;
+        }
+
+        setMembers((ms) =>
+          ms.map((m) =>
+            m.id === member.id ? { ...m, password: nextPassword } : m,
+          ),
+        );
+        pushAudit(setAudit, "Member Password Reset", member.id);
         return true;
       },
       approveLoan: (memberId) => {

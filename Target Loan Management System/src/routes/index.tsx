@@ -88,7 +88,7 @@ function LoginPage() {
           </h1>
           <p className="mt-4 max-w-md text-base text-muted-foreground">
             Manage your monthly contributions, apply for cooperative loans on a
-            1% monthly declining balance, and track every naira in one place.
+            1% monthly reducing balance, and track every naira in one place.
           </p>
 
           <div className="mt-8 grid max-w-md grid-cols-3 gap-3 text-xs">
@@ -158,13 +158,21 @@ function LoginPage() {
                     required
                   />
                 </div>
-                <p
-                  className={`mt-1 text-xs ${
-                    passwordReady ? "text-success" : "text-muted-foreground"
-                  }`}
-                >
-                  {passwordHint}
-                </p>
+                <div className="mt-1 flex items-center justify-between gap-3">
+                  <p
+                    className={`min-w-0 text-xs ${
+                      passwordReady ? "text-success" : "text-muted-foreground"
+                    }`}
+                  >
+                    {passwordHint}
+                  </p>
+                  <a
+                    href="/reset-password"
+                    className="shrink-0 text-xs font-semibold text-primary transition hover:text-primary-strong hover:underline"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
               </label>
               <button
                 type="submit"
